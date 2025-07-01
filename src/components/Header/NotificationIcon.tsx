@@ -1,5 +1,5 @@
 import React from 'react';
-import bellUrl from '../../assets/bell.svg';
+import bellUrl from '../../assets/header/bell.svg';
 
 interface NotificationIconProps {
   count: number;

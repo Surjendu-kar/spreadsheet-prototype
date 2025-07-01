@@ -10,7 +10,6 @@ const Header = () => {
 
       <div className="flex justify-center items-center gap-1">
         <SearchBar />
-
         <NotificationIcon count={2} />
         <UserAvatars />
       </div>
