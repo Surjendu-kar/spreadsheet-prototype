@@ -5,7 +5,8 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import type { ColumnDef } from '@tanstack/react-table';
-import data from '../../data/data.json';
+import rawData from '../../data/data.json';
+const data = rawData as SpreadsheetRow[];
 import StatusBadge from './StatusBadge';
 import PriorityBadge from './PriorityBadge';
 import type { SpreadsheetRow } from './SpreadsheetRow';
@@ -250,7 +251,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
 ];
 
 const SpreadsheetTable: React.FC = () => {
-  const table = useReactTable({
+  const table = useReactTable<SpreadsheetRow>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
