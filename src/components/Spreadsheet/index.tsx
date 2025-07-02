@@ -21,6 +21,7 @@ import ChevronCycle from '../../assets/table/chevron-circle.svg';
 import Emoji from '../../assets/table/emoji.svg';
 import Person from '../../assets/table/person.svg';
 import Globe from '../../assets/table/globe.svg';
+import PlusIcon from '../../assets/tab/plus.svg';
 
 const MIN_ROWS = 1000;
 
@@ -45,6 +46,11 @@ const paddedData: SpreadsheetRow[] = [
     makeEmptyRow(i),
   ),
 ];
+
+function truncateText(text: string, maxLength: number) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
 
 const columns: ColumnDef<SpreadsheetRow>[] = [
   {
@@ -82,9 +88,14 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div
+            className="px-2 text-xs overflow-hidden text-ellipsis whitespace-nowrap"
+            title={info.getValue() as string}
+          >
+            {truncateText(info.getValue() as string, 36)}
+          </div>
         ),
-        size: 220,
+        size: 100,
       },
       {
         accessorKey: 'submitted',
@@ -155,17 +166,27 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => (
-          <a
-            href={`https://${info.getValue()}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-2 text-text underline text-xs"
-          >
-            {info.getValue() as string}
-          </a>
-        ),
-        size: 160,
+        cell: (info) => {
+          const value = info.getValue() as string;
+          const maxLength = 15;
+          const isTruncated = value.length > maxLength;
+          const visibleText = isTruncated ? value.slice(0, maxLength) : value;
+          return (
+            <a
+              href={`https://${value}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2 text-xs"
+              title={value}
+            >
+              <span className="text-text underline">{visibleText}</span>
+              {isTruncated && (
+                <span className="text-text no-underline">...</span>
+              )}
+            </a>
+          );
+        },
+        size: 120,
       },
     ],
   },
@@ -280,6 +301,27 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       },
     ],
   },
+  {
+    id: 'addColumnGroup',
+    header: () => (
+      <div className="flex items-center p-2 justify-center h-full bg-[#F8F8F8] border-l-[2px] border-r-[2px]  border-dashed border-[#CBCBCB] min-w-[40px]">
+        <img src={PlusIcon} alt="add-column" className="w-5 h-5" />
+      </div>
+    ),
+    columns: [
+      {
+        id: 'addColumnChild',
+        header: () => (
+          <div className=" min-w-[40px] border-dashed border-[#CBCBCB] border-l-[2px] border-r-[2px] p-2 py-3  " />
+        ),
+        cell: () => (
+          <div className="h-[25px]  border-dashed border-[#CBCBCB] border-l-[2px] border-r-[2px]  " />
+        ),
+        size: 140,
+        enableResizing: false,
+      },
+    ],
+  },
 ];
 
 const SpreadsheetTable: React.FC = () => {
@@ -293,7 +335,7 @@ const SpreadsheetTable: React.FC = () => {
 
   return (
     <div className="overflow-x-auto w-full">
-      <table className="min-w-max border-collapse w-full">
+      <table className="min-w-max border-collapse w-[98%]">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -302,7 +344,11 @@ const SpreadsheetTable: React.FC = () => {
                   key={header.id}
                   colSpan={header.colSpan}
                   style={{ width: header.getSize(), position: 'relative' }}
-                  className="border border-white bg-white align-left"
+                  className={
+                    header.column.id === 'addColumnChild'
+                      ? 'bg-white align-left'
+                      : 'border-l border-t border-b border-white bg-white align-left'
+                  }
                 >
                   {header.isPlaceholder
                     ? null
@@ -324,12 +370,18 @@ const SpreadsheetTable: React.FC = () => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border border-[#EEEEEE]">
+            <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
                   style={{ width: cell.column.getSize() }}
-                  className="border border-[#EEEEEE]  py-1 align-middle bg-white"
+                  className={
+                    cell.column.id === 'estValue'
+                      ? 'border-t border-b border-l border-[#EEEEEE] align-middle bg-white'
+                      : cell.column.id === 'addColumnChild'
+                        ? 'align-middle bg-white border-t border-[#EEEEEE]'
+                        : 'border border-[#EEEEEE] align-middle bg-white'
+                  }
                   tabIndex={0}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
