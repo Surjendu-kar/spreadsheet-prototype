@@ -22,6 +22,30 @@ import Emoji from '../../assets/table/emoji.svg';
 import Person from '../../assets/table/person.svg';
 import Globe from '../../assets/table/globe.svg';
 
+const MIN_ROWS = 1000;
+
+function makeEmptyRow(index: number): SpreadsheetRow {
+  return {
+    id: 10000 + index,
+    jobRequest: '',
+    submitted: '',
+    status: '',
+    submitter: '',
+    url: '',
+    assigned: '',
+    priority: '',
+    dueDate: '',
+    estValue: 0,
+  };
+}
+
+const paddedData: SpreadsheetRow[] = [
+  ...data,
+  ...Array.from({ length: Math.max(0, MIN_ROWS - data.length) }, (_, i) =>
+    makeEmptyRow(i),
+  ),
+];
+
 const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'serial',
@@ -31,7 +55,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
     cell: ({ row }) => (
       <div className="text-sm text-text-light text-center">{row.index + 1}</div>
     ),
-    size: 30,
+    size: 10,
     enableResizing: false,
   },
   {
@@ -58,7 +82,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs">{info.getValue() as string}</div>
+          <div className="px-2 text-xs">{info.getValue() as string}</div>
         ),
         size: 220,
       },
@@ -74,7 +98,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs text-right">
+          <div className="px-2 text-xs text-right">
             {info.getValue() as string}
           </div>
         ),
@@ -92,7 +116,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-center">
+          <div className="px-2 text-center">
             <StatusBadge status={info.getValue() as any} />
           </div>
         ),
@@ -110,7 +134,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs">{info.getValue() as string}</div>
+          <div className="px-2 text-xs">{info.getValue() as string}</div>
         ),
         size: 130,
       },
@@ -136,7 +160,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             href={`https://${info.getValue()}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-1 text-text underline text-xs"
+            className="px-2 text-text underline text-xs"
           >
             {info.getValue() as string}
           </a>
@@ -172,7 +196,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs">{info.getValue() as string}</div>
+          <div className="px-2 text-xs">{info.getValue() as string}</div>
         ),
         size: 130,
       },
@@ -200,7 +224,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs text-center">
+          <div className="px-2 text-xs text-center">
             <PriorityBadge priority={info.getValue() as any} />
           </div>
         ),
@@ -214,7 +238,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-1 text-xs text-right">
+          <div className="px-2 text-xs text-right">
             {info.getValue() as string}
           </div>
         ),
@@ -243,12 +267,15 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             Est. Value
           </div>
         ),
-        cell: (info) => (
-          <div className="flex items-center gap-1 px-1 text-xs justify-end">
-            {Number(info.getValue()).toLocaleString('en-IN')}
-            <span className='text-[#AFAFAF]'>₹</span>
-          </div>
-        ),
+        cell: (info) => {
+          const value = info.getValue() as number;
+          return value > 0 ? (
+            <div className="flex items-center gap-1 px-2 text-xs justify-end">
+              {Number(value).toLocaleString('en-IN')}
+              <span className="text-[#AFAFAF]">₹</span>
+            </div>
+          ) : null;
+        },
         size: 120,
       },
     ],
@@ -257,7 +284,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
 
 const SpreadsheetTable: React.FC = () => {
   const table = useReactTable<SpreadsheetRow>({
-    data,
+    data: paddedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: 'onChange',
@@ -302,7 +329,7 @@ const SpreadsheetTable: React.FC = () => {
                 <td
                   key={cell.id}
                   style={{ width: cell.column.getSize() }}
-                  className="border border-[#EEEEEE] px-2 py-1 align-middle bg-white"
+                  className="border border-[#EEEEEE]  py-1 align-middle bg-white"
                   tabIndex={0}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -5,11 +5,11 @@ export interface SpreadsheetRow {
   id: number;
   jobRequest: string;
   submitted: string;
-  status: Status;
+  status: string;
   submitter: string;
   url: string;
   assigned: string;
-  priority: Priority;
+  priority: string;
   dueDate: string;
   estValue: number;
 }
