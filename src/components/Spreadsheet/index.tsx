@@ -11,6 +11,15 @@ import PriorityBadge from './PriorityBadge';
 import type { SpreadsheetRow } from './SpreadsheetRow';
 import LinkImg from '../../assets/table/link.svg';
 import ArrowSync from '../../assets/table/arrow-sync.svg';
+import ArrowSplitIcon from '../../assets/table/arrow-split.svg';
+import ArrowSplit from '../../assets/toolbar/arrow-split.svg';
+import BriefCase from '../../assets/table/briefcase.svg';
+import Chevron from '../../assets/table/chevron.svg';
+import Calender from '../../assets/table/calender.svg';
+import ChevronCycle from '../../assets/table/chevron-circle.svg';
+import Emoji from '../../assets/table/emoji.svg';
+import Person from '../../assets/table/person.svg';
+import Globe from '../../assets/table/globe.svg';
 
 const columns: ColumnDef<SpreadsheetRow>[] = [
   {
@@ -27,8 +36,8 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'financialOverview',
     header: () => (
-      <div className="bg-[#E2E2E2] text-[#545454] p-1 pl-2 flex gap-2 items-center  font-semibold text-xs text-left">
-        <div className="bg-[#EEEEEE] flex items-center p-2 rounded-[4px] gap-1">
+      <div className="bg-[#E2E2E2] text-[#545454] p-[4px] pl-2 flex gap-2 items-center  font-semibold text-xs text-left">
+        <div className="bg-[#EEEEEE] flex items-center p-1.5 rounded-[4px] gap-1">
           <img src={LinkImg} alt="link-img" />
           <span>Q3 Financial Overview</span>
         </div>
@@ -39,8 +48,12 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       {
         accessorKey: 'jobRequest',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
-            Job Request
+          <div className="px-2 py-1 flex items-center justify-between font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
+            <div className="flex items-center gap-1">
+              <img src={BriefCase} alt="brief-case" />
+              <span>Job Request</span>
+            </div>
+            <img src={Chevron} alt="arrow" />
           </div>
         ),
         cell: (info) => (
@@ -51,8 +64,12 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       {
         accessorKey: 'submitted',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
-            Submitted
+          <div className="px-2 py-1 flex items-center justify-between  font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
+            <div className="flex items-center gap-1">
+              <img src={Calender} alt="calender" />
+              <span>Submitted</span>
+            </div>
+            <img src={Chevron} alt="arrow" />
           </div>
         ),
         cell: (info) => (
@@ -63,8 +80,12 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       {
         accessorKey: 'status',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
-            Status
+          <div className="px-2 py-1 flex items-center justify-between font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
+            <div className="flex items-center gap-1">
+              <img src={ChevronCycle} alt="chevron-cycle" />
+              <span>Status</span>
+            </div>
+            <img src={Chevron} alt="arrow" />
           </div>
         ),
         cell: (info) => (
@@ -77,8 +98,12 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       {
         accessorKey: 'submitter',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
-            Submitter
+          <div className="px-2 py-1 flex items-center justify-between font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
+            <div className="flex items-center gap-1">
+              <img src={Person} alt="person" />
+              <span>Submitter</span>
+            </div>
+            <img src={Chevron} alt="arrow" />
           </div>
         ),
         cell: (info) => (
@@ -95,8 +120,12 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
       {
         accessorKey: 'url',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
-            URL
+          <div className="px-2 py-1 flex items-center justify-between font-medium bg-[#EEEEEE] text-xs text-text-light text-left">
+            <div className="flex items-center gap-1">
+              <img src={Globe} alt="globe" />
+              <span>URL</span>
+            </div>
+            <img src={Chevron} alt="arrow" />
           </div>
         ),
         cell: (info) => (
@@ -116,16 +145,27 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'abc',
     header: () => (
-      <div className="bg-light-green text-[#505450] p-2 font-semibold text-sm">
-        ABC
+      <div className="bg-light-green flex justify-center items-center gap-1  p-2 font-semibold text-sm">
+        <img
+          src={ArrowSplitIcon}
+          alt="arrow-split"
+          className="text-[#A3ACA3]"
+        />
+        <span className="text-[#505450]">ABC</span>
+        <span className="flex items-center justify-center gap-0.5 pt-0.5 pl-2">
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+        </span>
       </div>
     ),
     columns: [
       {
         accessorKey: 'assigned',
         header: () => (
-          <div className="px-2 py-1 font-medium bg-[#E8F0E9] text-xs text-[#666C66] text-left">
-            Assigned
+          <div className="px-2 py-1 flex items-center gap-1 font-medium bg-[#E8F0E9] text-xs text-[#666C66] text-left">
+            <img src={Emoji} alt="Emoji" />
+            <span>Assigned</span>
           </div>
         ),
         cell: (info) => (
@@ -138,8 +178,14 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'answer',
     header: () => (
-      <div className="bg-purple text-[#463E59] p-2 font-semibold text-sm">
-        Answer a question
+      <div className="bg-[#DCCFFC] flex justify-center items-center gap-1  p-2 font-semibold text-sm">
+        <img src={ArrowSplit} alt="arrow-split" className="text-[#A3ACA3]" />
+        <span className="text-[#463E59]">Answer a question</span>
+        <span className="flex items-center justify-center gap-0.5 pt-0.5 pl-2">
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+        </span>
       </div>
     ),
     columns: [
@@ -174,8 +220,14 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'extract',
     header: () => (
-      <div className="bg-orange text-[#695149] p-2 font-semibold text-sm">
-        Extract
+      <div className="bg-[#FAC2AF]  flex justify-center items-center gap-1 p-2 font-semibold text-sm">
+        <img src={ArrowSplit} alt="arrow-split" className="text-[#A3ACA3]" />
+        <span className="text-[#695149]">Extract</span>
+        <span className="flex items-center justify-center gap-0.5 pt-0.5 pl-2">
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+          <span className="w-[3px] h-[3px] bg-[#AFAFAF] rounded-full"></span>
+        </span>
       </div>
     ),
     columns: [
