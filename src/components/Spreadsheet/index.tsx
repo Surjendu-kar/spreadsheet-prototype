@@ -58,7 +58,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div className="px-1 text-xs">{info.getValue() as string}</div>
         ),
         size: 220,
       },
@@ -74,7 +74,9 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div className="px-1 text-xs text-right">
+            {info.getValue() as string}
+          </div>
         ),
         size: 110,
       },
@@ -90,7 +92,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2">
+          <div className="px-1 text-center">
             <StatusBadge status={info.getValue() as any} />
           </div>
         ),
@@ -108,7 +110,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div className="px-1 text-xs">{info.getValue() as string}</div>
         ),
         size: 130,
       },
@@ -134,7 +136,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             href={`https://${info.getValue()}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-2 text-text underline text-xs"
+            className="px-1 text-text underline text-xs"
           >
             {info.getValue() as string}
           </a>
@@ -170,7 +172,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div className="px-1 text-xs">{info.getValue() as string}</div>
         ),
         size: 130,
       },
@@ -198,7 +200,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">
+          <div className="px-1 text-xs text-center">
             <PriorityBadge priority={info.getValue() as any} />
           </div>
         ),
@@ -212,7 +214,9 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
+          <div className="px-1 text-xs text-right">
+            {info.getValue() as string}
+          </div>
         ),
         size: 110,
       },
@@ -240,8 +244,9 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => (
-          <div className="px-2 text-xs">
+          <div className="flex items-center gap-1 px-1 text-xs justify-end">
             {Number(info.getValue()).toLocaleString('en-IN')}
+            <span className='text-[#AFAFAF]'>₹</span>
           </div>
         ),
         size: 120,
