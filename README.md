@@ -10,6 +10,10 @@ Create a static, front-end-only React prototype that visually matches the attach
 
 Build a pixel perfect experience as per Figma (including the actual spreadsheet experience).
 
+### Figma Design Screenshot
+
+![Product Spreadsheet Design](https://github.com/Surjendu-kar/spreadsheet-prototype/blob/main/public/spreadsheet-design.png?raw=true)
+
 ## 3. Tech Stack
 
 The prototype is built using the following technologies:
