@@ -85,6 +85,11 @@ const EditableCell = ({
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const columnWidth = column.getSize();
+  // Approximate character width for text-xs (12px font-size). This is a heuristic.
+  const estimatedCharWidth = 3;
+  const calculatedMaxLength = Math.floor(columnWidth / estimatedCharWidth);
+
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
@@ -135,7 +140,7 @@ const EditableCell = ({
       onKeyDown={handleKeyDown}
     >
       <span className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
-        {value}
+        {truncateText(value, calculatedMaxLength)}
       </span>
     </div>
   );
@@ -377,7 +382,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableCell {...info} alignEnd={true} />,
-        size: 110,
+        size: 130,
       },
       {
         accessorKey: 'status',
@@ -391,7 +396,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableStatusCell {...info} />,
-        size: 110,
+        size: 150,
       },
       {
         accessorKey: 'submitter',
@@ -404,8 +409,8 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => <EditableCell {...info}/>,
-        size: 130,
+        cell: (info) => <EditableCell {...info} />,
+        size: 140,
       },
     ],
   },
@@ -425,7 +430,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableCell {...info} />,
-        size: 120,
+        size: 50,
       },
     ],
   },
@@ -456,7 +461,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableCell {...info} />,
-        size: 130,
+        size: 140,
       },
     ],
   },
@@ -482,7 +487,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditablePriorityCell {...info} />,
-        size: 90,
+        size: 130,
       },
       {
         accessorKey: 'dueDate',
@@ -492,7 +497,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableCell {...info} alignEnd={true} />,
-        size: 110,
+        size: 130,
       },
     ],
   },
@@ -518,7 +523,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
           </div>
         ),
         cell: (info) => <EditableNumericCell {...info} />,
-        size: 120,
+        size: 130,
       },
     ],
   },
@@ -538,7 +543,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
         cell: () => (
           <div className="h-[25px]  border-dashed border-[#CBCBCB] border-l-[2px] border-r-[2px]  " />
         ),
-        size: 140,
+        size: 150,
         enableResizing: false,
       },
     ],
@@ -621,8 +626,8 @@ const SpreadsheetTable: React.FC = () => {
   };
 
   return (
-    <div className="overflow-x-scroll overflow-y-hidden w-full">
-      <table className="w-full md:w-[98%] border-collapse table-fixed">
+    <div className="block max-w-full overflow-x-auto overflow-y-hidden">
+      <table className="w-full md:w-[98%] border-collapse">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -630,7 +635,10 @@ const SpreadsheetTable: React.FC = () => {
                 <th
                   key={header.id}
                   colSpan={header.colSpan}
-                  style={{ width: header.getSize(), position: 'relative' }}
+                  style={{
+                    width: header.getSize(),
+                    position: 'relative',
+                  }}
                   className={
                     header.column.id === 'addColumnChild'
                       ? 'bg-white align-left'
@@ -647,9 +655,21 @@ const SpreadsheetTable: React.FC = () => {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none ${
-                        header.column.getIsResizing() ? 'bg-blue-400' : ''
+                      className={`resizer ${
+                        header.column.getIsResizing() ? 'isResizing' : ''
                       }`}
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        height: '100%',
+                        width: '5px',
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        cursor: 'col-resize',
+                        userSelect: 'none',
+                        touchAction: 'none',
+                        opacity: header.column.getIsResizing() ? 1 : 0,
+                      }}
                     />
                   )}
                 </th>
