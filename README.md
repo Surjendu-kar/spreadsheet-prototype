@@ -95,7 +95,3 @@ To set up and run this project locally, follow these steps:
     npm run lint
     npm run type-check
     ```
-
-```
-
-```
