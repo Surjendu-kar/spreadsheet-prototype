@@ -14,22 +14,22 @@ const ToolbarLeft = () => {
 
       <span className="h-6 w-px bg-[#EEEEEE] mx-1" />
 
-      <span className="flex items-center gap-1 p-2 pr-3">
+      <span className="flex items-center gap-1 p-2 pr-3 hover:opacity-80 transition-opacity duration-300 cursor-pointer">
         <img src={HideFieldsIcon} alt="Hide fields" className="w-4 h-4" />
         Hide fields
       </span>
 
-      <span className="flex items-center gap-1 p-2 pr-3">
+      <span className="flex items-center gap-1 p-2 pr-3 hover:opacity-80 transition-opacity duration-300 cursor-pointer">
         <img src={SortIcon} alt="Sort" className="w-4 h-4" />
         Sort
       </span>
 
-      <span className="flex items-center gap-1 p-2 pr-3">
+      <span className="flex items-center gap-1 p-2 pr-3 hover:opacity-80 transition-opacity duration-300 cursor-pointer">
         <img src={FilterIcon} alt="Filter" className="w-4 h-4" />
         Filter
       </span>
 
-      <span className="flex items-center gap-1">
+      <span className="flex items-center gap-1 p-2 pr-3 hover:opacity-80 transition-opacity duration-300 cursor-pointer">
         <img src={CellViewIcon} alt="Cell view" className="w-4 h-4" />
         Cell view
       </span>

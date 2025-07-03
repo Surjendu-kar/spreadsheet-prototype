@@ -18,7 +18,7 @@ const ToolbarRight = () => {
         <img src={ShareIcon} alt="Share" className="w-4 h-4" />
         Share
       </button>
-      <button className="bg-primary text-white rounded-[6px] px-6 py-2 font-medium  flex items-center gap-1">
+      <button className="bg-primary text-white rounded-[6px] px-6 py-2 font-medium  flex items-center gap-1 hover:opacity-80 transition-opacity duration-300">
         <img src={ArrowSplitIcon} alt="New Action" className="w-5 h-5" />
         New Action
       </button>

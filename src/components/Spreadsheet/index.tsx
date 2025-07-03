@@ -543,7 +543,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
         cell: () => (
           <div className="h-[25px]  border-dashed border-[#CBCBCB] border-l-[2px] border-r-[2px]  " />
         ),
-        size: 150,
+        size: 120,
         enableResizing: false,
       },
     ],
