@@ -256,6 +256,121 @@ const EditablePriorityCell = ({
   );
 };
 
+const EditableDateCell = ({
+  getValue,
+  row,
+  column,
+  table,
+  alignEnd,
+}: {
+  getValue: () => string;
+  row: Row<SpreadsheetRow>;
+  column: Column<SpreadsheetRow, string>;
+  table: Table<SpreadsheetRow>;
+  alignEnd?: boolean;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Function to convert any recognized date format to DD-MM-YYYY for internal state and display
+  const normalizeDateToDDMMYYYY = (dateString: string) => {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+      if (parts[0].length === 4) {
+        // Assumes YYYY-MM-DD
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      } else if (parts[0].length <= 2) {
+        // Assumes DD-MM-YYYY
+        return dateString;
+      }
+    }
+    // Fallback: try to parse as a Date object and then format
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    return dateString; // As a last resort, return the original string
+  };
+
+  const initialValue = normalizeDateToDDMMYYYY(getValue()); // Normalize initial value to DD-MM-YYYY
+  const [value, setValue] = useState(initialValue);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    setValue(normalizeDateToDDMMYYYY(getValue())); // Re-normalize on initialValue change (due to external data change)
+  }, [getValue]);
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
+
+  const onBlur = () => {
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id as keyof SpreadsheetRow,
+      value,
+    );
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      if (isEditing) {
+        inputRef.current?.blur();
+      } else {
+        setIsEditing(true);
+      }
+    } else if (e.key === 'Escape') {
+      setValue(initialValue);
+      setIsEditing(false);
+    }
+  };
+
+  // Converts DD-MM-YYYY (from state) to YYYY-MM-DD (for input type="date")
+  const formatDateForInput = (dateString: string) => {
+    if (!dateString) return '';
+    const parts = dateString.split('-'); // Expected DD-MM-YYYY
+    if (parts.length === 3 && parts[0].length <= 2) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert to YYYY-MM-DD
+    }
+    // Fallback for initial strange values not normalized by normalizeDateToDDMMYYYY
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+    }
+    return '';
+  };
+
+  return isEditing ? (
+    <input
+      ref={inputRef}
+      type="date"
+      value={formatDateForInput(value)} // Input expects YYYY-MM-DD
+      onChange={(e) => setValue(normalizeDateToDDMMYYYY(e.target.value))} // Input provides YYYY-MM-DD, convert to DD-MM-YYYY for state
+      onBlur={onBlur}
+      onKeyDown={handleKeyDown}
+      className="w-full h-full px-2 py-1 text-xs border-[2px] outline-none"
+    />
+  ) : (
+    <div
+      className={`px-2 text-xs h-full w-full min-h-[25px] flex items-center ${alignEnd ? ' justify-end' : ''}`}
+      title={value} // Display DD-MM-YYYY
+      onClick={() => setIsEditing(true)}
+      onKeyDown={handleKeyDown}
+    >
+      <span className="overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
+        {value} {/* Display DD-MM-YYYY */}
+      </span>
+    </div>
+  );
+};
+
 const EditableNumericCell = ({
   getValue,
   row,
@@ -381,7 +496,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => <EditableCell {...info} alignEnd={true} />,
+        cell: (info) => <EditableDateCell {...info} alignEnd={true} />,
         size: 130,
       },
       {
@@ -496,7 +611,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             Due Date
           </div>
         ),
-        cell: (info) => <EditableCell {...info} alignEnd={true} />,
+        cell: (info) => <EditableDateCell {...info} alignEnd={true} />,
         size: 130,
       },
     ],
