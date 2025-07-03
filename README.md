@@ -12,7 +12,7 @@ Build a pixel perfect experience as per Figma (including the actual spreadsheet 
 
 ### Figma Design Screenshot
 
-![Product Spreadsheet Design](https://github.com/Surjendu-kar/spreadsheet-prototype/blob/main/public/spreadsheet-design.png?raw=true)
+![Product Spreadsheet Design](https://github.com/Surjendu-kar/spreadsheet-prototype/blob/master/public/spreadsheet-design.png?raw=true)
 
 ## 3. Tech Stack
 
