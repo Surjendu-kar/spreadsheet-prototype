@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import type { ColumnDef } from '@tanstack/react-table';
+import type {
+  ColumnDef,
+  Cell,
+  Column,
+  Row,
+  Table,
+  TableMeta,
+} from '@tanstack/react-table';
 import rawData from '../../data/data.json';
 const data = rawData as SpreadsheetRow[];
 import StatusBadge from './StatusBadge';
@@ -52,6 +59,270 @@ function truncateText(text: string, maxLength: number) {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
 
+interface MyTableMeta extends TableMeta<SpreadsheetRow> {
+  updateData: (rowIndex: number, columnId: string | number, value: any) => void;
+}
+
+const EditableCell = ({
+  getValue,
+  row,
+  column,
+  table,
+  truncate,
+}: {
+  getValue: () => any;
+  row: Row<SpreadsheetRow>;
+  column: Column<SpreadsheetRow, any>;
+  table: Table<SpreadsheetRow>;
+  truncate: boolean;
+}) => {
+  const initialValue = getValue();
+  const [value, setValue] = useState(initialValue);
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
+
+  const onBlur = () => {
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      value,
+    );
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      if (isEditing) {
+        inputRef.current?.blur();
+      } else {
+        setIsEditing(true);
+      }
+    } else if (e.key === 'Escape') {
+      setValue(initialValue);
+      setIsEditing(false);
+    }
+  };
+
+  const displayValue = truncate ? truncateText(value as string, 36) : value;
+
+  return isEditing ? (
+    <input
+      ref={inputRef}
+      value={value as string}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={onBlur}
+      onKeyDown={handleKeyDown}
+      className="w-full h-full px-2 py-1 text-xs border-[2px] outline-none"
+    />
+  ) : (
+    <div
+      className="px-2 text-xs overflow-hidden text-ellipsis whitespace-nowrap h-full w-full min-h-[25px]"
+      title={value as string}
+      onClick={() => setIsEditing(true)}
+      onKeyDown={handleKeyDown}
+    >
+      {displayValue}
+    </div>
+  );
+};
+
+const EditableStatusCell = ({
+  getValue,
+  row,
+  column,
+  table,
+}: {
+  getValue: () => any;
+  row: Row<SpreadsheetRow>;
+  column: Column<SpreadsheetRow, any>;
+  table: Table<SpreadsheetRow>;
+}) => {
+  const initialValue = getValue();
+  const [value, setValue] = useState(initialValue);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onBlur = () => {
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      value,
+    );
+    setIsEditing(false);
+  };
+
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setValue(e.target.value);
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      e.target.value,
+    );
+    setIsEditing(false);
+  };
+
+  return isEditing ? (
+    <select
+      value={value}
+      onChange={onSelectChange}
+      onBlur={onBlur}
+      className="w-full h-full px-2 py-1 text-xs border-[2px] outline-none"
+      autoFocus
+    >
+      <option value="In-process">In-process</option>
+      <option value="Need to start">Need to start</option>
+      <option value="Complete">Complete</option>
+      <option value="Blocked">Blocked</option>
+    </select>
+  ) : (
+    <div onClick={() => setIsEditing(true)} className="px-2 text-center">
+      <StatusBadge status={value as any} />
+    </div>
+  );
+};
+
+const EditablePriorityCell = ({
+  getValue,
+  row,
+  column,
+  table,
+}: {
+  getValue: () => any;
+  row: Row<SpreadsheetRow>;
+  column: Column<SpreadsheetRow, any>;
+  table: Table<SpreadsheetRow>;
+}) => {
+  const initialValue = getValue();
+  const [value, setValue] = useState(initialValue);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onBlur = () => {
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      value,
+    );
+    setIsEditing(false);
+  };
+
+  const onSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setValue(e.target.value);
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      e.target.value,
+    );
+    setIsEditing(false);
+  };
+
+  return isEditing ? (
+    <select
+      value={value}
+      onChange={onSelectChange}
+      onBlur={onBlur}
+      className="w-full h-full px-2 py-1 text-xs border-[2px] outline-none"
+      autoFocus
+    >
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+  ) : (
+    <div
+      onClick={() => setIsEditing(true)}
+      className="px-2 text-xs text-center min-h-[25px]"
+    >
+      <PriorityBadge priority={value as any} />
+    </div>
+  );
+};
+
+const EditableNumericCell = ({
+  getValue,
+  row,
+  column,
+  table,
+}: {
+  getValue: () => any;
+  row: Row<SpreadsheetRow>;
+  column: Column<SpreadsheetRow, any>;
+  table: Table<SpreadsheetRow>;
+}) => {
+  const initialValue = getValue();
+  const [value, setValue] = useState(initialValue);
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
+
+  const onBlur = () => {
+    (table.options.meta as MyTableMeta)?.updateData(
+      row.index,
+      column.id,
+      value,
+    );
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.stopPropagation();
+      if (isEditing) {
+        inputRef.current?.blur();
+      } else {
+        setIsEditing(true);
+      }
+    } else if (e.key === 'Escape') {
+      setValue(initialValue);
+      setIsEditing(false);
+    }
+  };
+
+  return isEditing ? (
+    <input
+      ref={inputRef}
+      type="number"
+      value={value as number}
+      onChange={(e) => setValue(Number(e.target.value))}
+      onBlur={onBlur}
+      onKeyDown={handleKeyDown}
+      className="w-full h-full px-2 py-1 text-xs border-[2px] outline-none"
+    />
+  ) : (
+    <div
+      className="px-2 text-xs overflow-hidden text-ellipsis whitespace-nowrap h-full w-full min-h-[25px] flex items-center justify-end gap-1"
+      title={value as string}
+      onClick={() => setIsEditing(true)}
+      onKeyDown={handleKeyDown}
+    >
+      {value ? (
+        <>
+          {Number(value).toLocaleString('en-IN')}
+          <span className="text-[#AFAFAF]">₹</span>
+        </>
+      ) : null}
+    </div>
+  );
+};
+
 const columns: ColumnDef<SpreadsheetRow>[] = [
   {
     id: 'serial',
@@ -87,14 +358,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => (
-          <div
-            className="px-2 text-xs overflow-hidden text-ellipsis whitespace-nowrap"
-            title={info.getValue() as string}
-          >
-            {truncateText(info.getValue() as string, 36)}
-          </div>
-        ),
+        cell: (info) => <EditableCell {...info} truncate={true} />,
         size: 100,
       },
       {
@@ -108,11 +372,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-xs text-right">
-            {info.getValue() as string}
-          </div>
-        ),
+        cell: (info) => <EditableCell {...info} truncate={false} />,
         size: 110,
       },
       {
@@ -126,11 +386,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-center">
-            <StatusBadge status={info.getValue() as any} />
-          </div>
-        ),
+        cell: (info) => <EditableStatusCell {...info} />,
         size: 110,
       },
       {
@@ -144,9 +400,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
-        ),
+        cell: (info) => <EditableCell {...info} truncate={false} />,
         size: 130,
       },
     ],
@@ -166,26 +420,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <img src={Chevron} alt="arrow" />
           </div>
         ),
-        cell: (info) => {
-          const value = info.getValue() as string;
-          const maxLength = 15;
-          const isTruncated = value.length > maxLength;
-          const visibleText = isTruncated ? value.slice(0, maxLength) : value;
-          return (
-            <a
-              href={`https://${value}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2 text-xs"
-              title={value}
-            >
-              <span className="text-text underline">{visibleText}</span>
-              {isTruncated && (
-                <span className="text-text no-underline">...</span>
-              )}
-            </a>
-          );
-        },
+        cell: (info) => <EditableCell {...info} truncate={false} />,
         size: 120,
       },
     ],
@@ -216,9 +451,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             <span>Assigned</span>
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-xs">{info.getValue() as string}</div>
-        ),
+        cell: (info) => <EditableCell {...info} truncate={false} />,
         size: 130,
       },
     ],
@@ -244,11 +477,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             Priority
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-xs text-center">
-            <PriorityBadge priority={info.getValue() as any} />
-          </div>
-        ),
+        cell: (info) => <EditablePriorityCell {...info} />,
         size: 90,
       },
       {
@@ -258,11 +487,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             Due Date
           </div>
         ),
-        cell: (info) => (
-          <div className="px-2 text-xs text-right">
-            {info.getValue() as string}
-          </div>
-        ),
+        cell: (info) => <EditableCell {...info} truncate={false} />,
         size: 110,
       },
     ],
@@ -288,15 +513,7 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
             Est. Value
           </div>
         ),
-        cell: (info) => {
-          const value = info.getValue() as number;
-          return value > 0 ? (
-            <div className="flex items-center gap-1 px-2 text-xs justify-end">
-              {Number(value).toLocaleString('en-IN')}
-              <span className="text-[#AFAFAF]">₹</span>
-            </div>
-          ) : null;
-        },
+        cell: (info) => <EditableNumericCell {...info} />,
         size: 120,
       },
     ],
@@ -325,13 +542,75 @@ const columns: ColumnDef<SpreadsheetRow>[] = [
 ];
 
 const SpreadsheetTable: React.FC = () => {
+  const [data, setData] = useState(paddedData);
+
   const table = useReactTable<SpreadsheetRow>({
-    data: paddedData,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: 'onChange',
     enableColumnResizing: true,
+    meta: {
+      updateData: (rowIndex: number, columnId: string | number, value: any) => {
+        setData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex]!,
+                [columnId]: value,
+              };
+            }
+            return row;
+          }),
+        );
+      },
+    } as MyTableMeta,
   });
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    cell: Cell<SpreadsheetRow, unknown>,
+  ) => {
+    const { key } = e;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+      return;
+    }
+    e.preventDefault();
+
+    const rows = table.getRowModel().rows;
+    const visibleColumns = table.getVisibleLeafColumns();
+    const currentColumnIndex = visibleColumns.findIndex(
+      (c) => c.id === cell.column.id,
+    );
+
+    let nextRow = cell.row.index;
+    let nextCol = currentColumnIndex;
+
+    switch (key) {
+      case 'ArrowUp':
+        nextRow = Math.max(0, cell.row.index - 1);
+        break;
+      case 'ArrowDown':
+        nextRow = Math.min(rows.length - 1, cell.row.index + 1);
+        break;
+      case 'ArrowLeft':
+        nextCol = Math.max(0, currentColumnIndex - 1);
+        break;
+      case 'ArrowRight':
+        nextCol = Math.min(visibleColumns.length - 1, currentColumnIndex + 1);
+        break;
+    }
+
+    const nextColumnId = visibleColumns[nextCol]?.id;
+    if (nextColumnId) {
+      const nextCellEl = document.querySelector(
+        `[data-row-index='${nextRow}'][data-column-id='${nextColumnId}']`,
+      );
+      if (nextCellEl) {
+        (nextCellEl as HTMLElement).focus();
+      }
+    }
+  };
 
   return (
     <div className="overflow-x-scroll overflow-y-hidden w-full">
@@ -360,7 +639,9 @@ const SpreadsheetTable: React.FC = () => {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none ${header.column.getIsResizing() ? 'bg-blue-400' : ''}`}
+                      className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none ${
+                        header.column.getIsResizing() ? 'bg-blue-400' : ''
+                      }`}
                     />
                   )}
                 </th>
@@ -377,12 +658,15 @@ const SpreadsheetTable: React.FC = () => {
                   style={{ width: cell.column.getSize() }}
                   className={
                     cell.column.id === 'estValue'
-                      ? 'border-t border-b border-l border-[#EEEEEE] align-middle bg-white'
+                      ? 'border-t border-b border-l border-[#EEEEEE] align-middle bg-white '
                       : cell.column.id === 'addColumnChild'
-                        ? 'align-middle bg-white border-t border-[#EEEEEE]'
-                        : 'border border-[#EEEEEE] align-middle bg-white'
+                        ? 'align-middle bg-white border-t border-[#EEEEEE] '
+                        : 'border border-[#EEEEEE] align-middle bg-white focus:border-[2px] focus:border-black focus:outline-none'
                   }
                   tabIndex={0}
+                  onKeyDown={(e) => handleKeyDown(e, cell)}
+                  data-row-index={row.index}
+                  data-column-id={cell.column.id}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
