@@ -28,7 +28,7 @@ const Tabs = () => {
         />
       ))}
       <button
-        className="px-4 py-2.5 flex items-center justify-center hover:bg-[#e2e2e257] rounded-t-md"
+        className="px-4 py-2.5 flex items-center justify-center hover:bg-[#e2e2e257]"
         onClick={addTab}
       >
         <img src={PlusIcon} alt="Add" className="w-5 h-5" />
