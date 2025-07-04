@@ -741,9 +741,9 @@ const SpreadsheetTable: React.FC = () => {
   };
 
   return (
-    <div className="block max-w-full overflow-x-auto overflow-y-hidden">
+    <div className="block max-w-full overflow-x-auto overflow-y-auto h-[calc(100vh-140px)]">
       <table className="w-full md:w-[98%] border-collapse">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-white">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

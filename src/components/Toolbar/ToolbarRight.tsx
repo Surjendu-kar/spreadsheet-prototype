@@ -1,21 +1,51 @@
-import ImportIcon from '../../assets/toolbar/import.svg';
-import ExportIcon from '../../assets/toolbar/export.svg';
-import ShareIcon from '../../assets/toolbar/share.svg';
 import ArrowSplitIcon from '../../assets/toolbar/arrow-split.svg';
 
 const ToolbarRight = () => {
   return (
     <div className="flex items-center gap-2 text-[#545454] text-sm">
-      <button className="flex p-2 pr-3  border border-[#EEEEEE] items-center gap-1 rounded-[6px]">
-        <img src={ImportIcon} alt="Import" className="w-4 h-4" />
+      <button className="flex p-2 pr-3  border border-[#EEEEEE] items-center gap-1 rounded-[6px] hover:bg-primary hover:text-white hover:bg-opacity-90 transition-colors duration-300">
+        <svg
+          width="13"
+          height="18"
+          viewBox="0 0 13 18"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12.2082 16.0833C12.5533 16.0832 12.8333 16.363 12.8333 16.7082C12.8333 17.0533 12.5537 17.3332 12.2085 17.3333L1.37518 17.3365C1.03 17.3366 0.75 17.0568 0.75 16.7117C0.75 16.3665 1.02964 16.0866 1.37482 16.0865L12.2082 16.0833ZM6.70686 0.676497L6.79167 0.670792C7.10808 0.670792 7.36958 0.90592 7.41096 1.21098L7.41667 1.29579L7.41583 12.7L10.5173 9.59968C10.7393 9.37782 11.0865 9.35768 11.3311 9.53925L11.4012 9.59977C11.6231 9.82169 11.6432 10.1689 11.4617 10.4136L11.4011 10.4837L7.23643 14.6475C7.01465 14.8692 6.66766 14.8895 6.423 14.7082L6.3529 14.6478L2.18336 10.4839C1.93912 10.24 1.93885 9.84428 2.18276 9.60003C2.40449 9.37799 2.7517 9.35758 2.9965 9.53896L3.06664 9.59943L6.16583 12.6941L6.16667 1.29579C6.16667 0.979378 6.40179 0.717883 6.70686 0.676497L6.79167 0.670792L6.70686 0.676497Z"
+            fill="currentColor"
+          />
+        </svg>
         Import
       </button>
-      <button className="flex p-2 pr-3 border border-[#EEEEEE] items-center gap-1 rounded-[6px]">
-        <img src={ExportIcon} alt="Export" className="w-4 h-4" />
+      <button className="flex p-2 pr-3 border border-[#EEEEEE] items-center gap-1 rounded-[6px] hover:bg-primary hover:text-white hover:bg-opacity-90 transition-colors duration-300">
+        <svg
+          width="13"
+          height="18"
+          viewBox="0 0 13 18"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12.2082 1.92392C12.5533 1.92402 12.8333 1.64428 12.8333 1.2991C12.8333 0.953924 12.5537 0.67402 12.2085 0.67392L1.37518 0.670784C1.03 0.670684 0.75 0.950425 0.75 1.2956C0.75 1.64078 1.02964 1.92068 1.37482 1.92078L12.2082 1.92392ZM6.70686 17.3308L6.79167 17.3365C7.10808 17.3365 7.36958 17.1013 7.41096 16.7963L7.41667 16.7115L7.41583 5.3073L10.5173 8.40757C10.7393 8.62944 11.0865 8.64958 11.3311 8.46801L11.4012 8.40748C11.6231 8.18557 11.6432 7.83835 11.4617 7.59369L11.4011 7.5236L7.23643 3.35975C7.01465 3.13801 6.66766 3.11776 6.423 3.29906L6.3529 3.3595L2.18336 7.52334C1.93912 7.76725 1.93885 8.16298 2.18276 8.40723C2.40449 8.62927 2.7517 8.64968 2.9965 8.4683L3.06664 8.40783L6.16583 5.31313L6.16667 16.7115C6.16667 17.0279 6.40179 17.2894 6.70686 17.3308Z"
+            fill="currentColor"
+          />
+        </svg>
         Export
       </button>
-      <button className="flex p-2 pr-3 border border-[#EEEEEE] items-center gap-1 rounded-[6px]">
-        <img src={ShareIcon} alt="Share" className="w-4 h-4" />
+      <button className="flex p-2 pr-3 border border-[#EEEEEE] items-center gap-1 rounded-[6px] hover:bg-primary hover:text-white hover:bg-opacity-90 transition-colors duration-300">
+        <svg
+          width="17"
+          height="16"
+          viewBox="0 0 17 16"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.62231 1.33333H6.50915C6.85433 1.33333 7.13415 1.61316 7.13415 1.95833C7.13415 2.27475 6.89902 2.53624 6.59396 2.57763L6.50915 2.58333H3.62231C2.62993 2.58333 1.81761 3.3543 1.75164 4.32996L1.74731 4.45833V12.375C1.74731 13.3674 2.51828 14.1797 3.49394 14.2457L3.62231 14.25H11.5396C12.532 14.25 13.3443 13.479 13.4103 12.5034L13.4146 12.375V11.9602C13.4146 11.615 13.6944 11.3352 14.0396 11.3352C14.356 11.3352 14.6175 11.5703 14.6589 11.8754L14.6646 11.9602V12.375C14.6646 14.0452 13.3543 15.4094 11.7056 15.4957L11.5396 15.5H3.62231C1.9521 15.5 0.58792 14.1897 0.501646 12.541L0.497314 12.375V4.45833C0.497314 2.78812 1.80762 1.42394 3.45635 1.33767L3.62231 1.33333H6.50915H3.62231ZM10.084 3.43321V1.125C10.084 0.605026 10.673 0.324957 11.0731 0.616503L11.1416 0.673953L16.1371 5.46562C16.3703 5.68924 16.3915 6.04843 16.2008 6.29673L16.1372 6.36765L11.1417 11.1609C10.7665 11.5209 10.1565 11.2897 10.0899 10.7991L10.084 10.7099V8.43878L9.79773 8.46387C7.79799 8.67247 5.88129 9.57321 4.03560 11.1811C3.60301 11.558 2.93374 11.2017 3.00488 10.6324C3.55888 6.19942 5.87710 3.75608 9.83450 3.44959L10.084 3.43321V1.125V3.43321ZM11.334 2.59054V4.04167C11.334 4.38685 11.0542 4.66667 10.709 4.66667C7.48114 4.66667 5.48062 6.06344 4.61625 8.96432L4.55037 9.19646L4.84386 8.99911C6.70760 7.781 8.66544 7.16667 10.709 7.16667C11.0254 7.16667 11.2869 7.4018 11.3283 7.70686L11.334 7.79167V9.24402L14.8017 5.91674L11.334 2.59054Z"
+            fill="currentColor"
+          />
+        </svg>
         Share
       </button>
       <button className="bg-primary text-white rounded-[6px] px-6 py-2 font-medium  flex items-center gap-1 hover:opacity-80 transition-opacity duration-300">

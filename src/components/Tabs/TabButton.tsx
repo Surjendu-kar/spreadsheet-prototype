@@ -13,7 +13,7 @@ const TabButton: React.FC<TabButtonProps> = ({
 }) => {
   return (
     <button
-      className={`px-4 py-2.5 text-sm font-medium  focus:outline-none transition-colors duration-150 ${active ? 'bg-lighter-green text-[#3E5741] border-t-2 border-t-[#4B6A4F] font-semibold' : 'bg-white text-text-light hover:bg-gray-100'}`}
+      className={`px-4 py-2.5 text-sm font-medium  focus:outline-none transition-colors duration-150 ${active ? 'bg-lighter-green text-[#3E5741] border-t-2 border-t-[#4B6A4F] font-semibold' : 'bg-white text-text-light'} hover:bg-[#e2e2e257]`}
       onClick={onClick}
     >
       {label}
